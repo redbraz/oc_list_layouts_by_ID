@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name><![CDATA[List Layout By ID]]></name>
+  <code><![CDATA[prai_list_layout_by_id]]></code>
+	<version><![CDATA[1.0]]></version>
+	<author><![CDATA[REDS PRAI]]></author>
+	<link><![CDATA[https://www.agenciaprai.com/]]></link>
+		
+    <file path="admin/controller/design/layout.php" error="skip">
+			<operation>
+				<search position="replace"><![CDATA[$sort = 'name';]]></search>
+				<add>
+				<![CDATA[$sort = 'layout_id';]]>
+				</add>
+			</operation>
+			<operation>
+				<search><![CDATA['name'      => $result['name'],]]></search>
+				<add position="after" trim="true"><![CDATA['route'     => $result['route'],]]></add>
+			</operation>
+    </file>
+		<file path="admin/model/design/layout.php" error="skip">
+			<operation>
+				<search position="replace"><![CDATA[$sql = "SELECT * FROM " . DB_PREFIX . "layout";]]></search>
+				<add><![CDATA[$sql = "SELECT * FROM " . DB_PREFIX . "layout l LEFT JOIN " . DB_PREFIX ."layout_route lr ON (l.layout_id = lr.layout_id )";]]></add>
+			</operation>
+			<operation>
+				<search position="replace"><![CDATA[$sort_data = array('name');]]></search>
+				<add><![CDATA[$sort_data = array('l.layout_id');]]></add>
+			</operation>
+			<operation>
+				<search position="replace"><![CDATA[$sql .= " ORDER BY name";]]></search>
+				<add><![CDATA[$sql .= " ORDER BY l.layout_id";]]></add>
+			</operation>
+		</file>
+		<file path="admin/view/template/design/layout_list.twig" error="skip">
+			<operation>
+				<search><![CDATA[<td class="text-left">{% if sort == 'name' %}]]></search>
+				<add position="before"><![CDATA[<td class="text-center" style="width: 50px;">ID</td>]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[<td class="text-right">{{ column_action }}</td>]]></search>
+				<add position="before"><![CDATA[<td class="text-left">Rota</td>]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[<td class="text-left">{{ layout.name }}</td>]]></search>
+				<add position="before"><![CDATA[<td class="text-center">{{ layout.layout_id }}</td>]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[<td class="text-left">{{ layout.name }}</td>]]></search>
+				<add position="after"><![CDATA[
+				<td class="text-left"><i class="fa fa-long-arrow-right"></i> {{ layout.route }}</td>
+				]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[<td class="text-center" colspan="3">]]></search>
+				<add position="replace"><![CDATA[<td class="text-center" colspan="4">]]></add>
+			</operation>
+			
+		</file>
+
+</modification>
